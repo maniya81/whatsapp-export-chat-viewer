@@ -4,16 +4,19 @@ import type { Chat } from '../types/chat';
 interface AppState {
   currentChat: Chat | null;
   isLoading: boolean;
+  switchSide: boolean;
 }
 
 type AppAction =
   | { type: 'SET_LOADING'; payload: boolean }
   | { type: 'SET_CURRENT_CHAT'; payload: Chat | null }
-  | { type: 'CLEAR_CHAT' };
+  | { type: 'CLEAR_CHAT' }
+  | { type: 'TOGGLE_SWITCH_SIDE' };
 
 const initialState: AppState = {
   currentChat: null,
-  isLoading: false
+  isLoading: false,
+  switchSide: false
 };
 
 function appReducer(state: AppState, action: AppAction): AppState {
@@ -26,6 +29,9 @@ function appReducer(state: AppState, action: AppAction): AppState {
     
     case 'CLEAR_CHAT':
       return { ...state, currentChat: null };
+    
+    case 'TOGGLE_SWITCH_SIDE':
+      return { ...state, switchSide: !state.switchSide };
     
     default:
       return state;

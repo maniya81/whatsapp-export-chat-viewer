@@ -52,6 +52,21 @@ const ClearButton = styled.button`
   }
 `;
 
+const SwitchButton = styled.button`
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 16px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: #0056b3;
+  }
+`;
+
 export function FileImportArea() {
   const { state, dispatch } = useApp();
 
@@ -142,6 +157,10 @@ export function FileImportArea() {
     }
   };
 
+  const handleSwitchSide = () => {
+    dispatch({ type: 'TOGGLE_SWITCH_SIDE' });
+  };
+
   // Load current chat on mount
   React.useEffect(() => {
     loadCurrentChat();
@@ -159,6 +178,10 @@ export function FileImportArea() {
       <ImportButton htmlFor="file-input">
         {state.isLoading ? 'Loading...' : 'Import WhatsApp Chat'}
       </ImportButton>
+      
+      <SwitchButton onClick={handleSwitchSide} disabled={state.isLoading}>
+        {state.switchSide ? 'Switch to Right' : 'Switch to Left'}
+      </SwitchButton>
       
       {state.currentChat && (
         <>

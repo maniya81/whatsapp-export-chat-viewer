@@ -473,6 +473,9 @@ export const MessageContent = styled.div`
   color: #111b21;
   white-space: pre-wrap;
   word-wrap: break-word;
+  padding-right: 70px;
+  padding-bottom: 18px;
+  position: relative;
 
   a {
     color: #53bdeb;
@@ -496,28 +499,27 @@ export const MessageTimestamp = styled.time`
   font-size: 11px;
   color: rgba(0, 0, 0, 0.45);
   line-height: 15px;
-  text-align: right;
-  float: right;
-  margin-top: 8px;
+  position: absolute;
+  bottom: 4px;
+  right: 7px;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  padding: 0;
 `;
 
 export const MessageStatus = styled.div<{
   $delivered?: boolean;
   $read?: boolean;
 }>`
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  margin-left: 4px;
-  float: right;
-  padding-right: 10px;
-  text-align: end;
-  letter-spacing: -14px;
-  filter: ${(props) => (props.$read ? "grayscale(0)" : "grayscale(1)")};
 
   svg {
-    width: 15px;
-    height: 11px;
+    width: 16px;
+    height: 10px;
     color: ${(props) => (props.$read ? "#53bdeb" : "rgba(0, 0, 0, 0.45)")};
+  }
   }
 `;
 

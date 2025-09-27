@@ -112,7 +112,8 @@ export function MainChatArea() {
     
     console.log(`Checking message from "${sender}" against current user "${currentUser}"`); // Debug log
     
-    return sender === currentUser || sender.includes(currentUser);
+    const isOutgoing = sender === currentUser || sender.includes(currentUser);
+    return state.switchSide ? !isOutgoing : isOutgoing;
   };
 
   const shouldShowDateSeparator = (message: Message, index: number): boolean => {
@@ -236,16 +237,14 @@ export function MainChatArea() {
                     )}
                     <MessageContent>
                       {getMessageTypeDisplay(message)}
-                      <span style={{ display: 'inline-flex', alignItems: 'flex-end', marginLeft: '8px' }}>
-                        <MessageTimestamp>
-                          {format(message.timestamp, 'h:mm a')}
-                        </MessageTimestamp>
+                      <MessageTimestamp>
+                        {format(message.timestamp, 'h:mm a')}
                         {isOutgoing && (
                           <MessageStatus $delivered={true} $read={false}>
                             <DoubleCheckIcon />
                           </MessageStatus>
                         )}
-                      </span>
+                      </MessageTimestamp>
                     </MessageContent>
                   </MessageBubble>
                 );
