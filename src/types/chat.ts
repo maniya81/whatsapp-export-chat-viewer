@@ -1,9 +1,20 @@
+export interface MediaFile {
+  id: string;
+  name: string;
+  type: string;
+  size: number;
+  url?: string;
+  blob?: Blob;
+}
+
 export interface Message {
   id: string;
   timestamp: Date;
   sender: string;
   content: string;
   type: "text" | "image" | "video" | "audio" | "document" | "system";
+  mediaFile?: MediaFile;
+  caption?: string; // For images/videos with captions
 }
 
 export interface Chat {
@@ -16,11 +27,4 @@ export interface Chat {
   participants?: string[];
   createdAt: Date;
   updatedAt: Date;
-}
-
-export interface SearchResult {
-  chatId: string;
-  chatName: string;
-  message: Message;
-  highlightedContent: string;
 }

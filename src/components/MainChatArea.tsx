@@ -3,15 +3,15 @@ import { useApp } from '../context/AppContext';
 import { format } from 'date-fns';
 import type { Message } from '../types/chat';
 import { DoubleCheckIcon } from './MessageIcons';
-import { SearchIcon, MoreOptionsIcon, VideoCallIcon, PhoneCallIcon } from './WhatsAppIcons';
+import { MoreOptionsIcon } from './WhatsAppIcons';
 import { MessageComposer } from './MessageComposer';
+import { MediaDisplay } from './MediaDisplay';
 import { groupConsecutiveMessages, shouldShowSenderName } from '../utils/messageGrouping';
 import {
   ChatArea,
   ChatHeader,
   ChatHeaderInfo,
   ChatHeaderName,
-  ChatHeaderStatus,
   DefaultAvatar,
   IconButton,
   MessagesContainer,
@@ -27,17 +27,17 @@ import {
 
 export function MainChatArea() {
   const { state } = useApp();
-  const { activeChat } = state;
+  const { currentChat } = state;
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Auto-scroll to bottom when chat changes or new messages
   useEffect(() => {
-    if (activeChat && messagesEndRef.current) {
+    if (currentChat && messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [activeChat?.id, activeChat?.messages.length]);
+  }, [currentChat?.id, currentChat?.messages.length]);
 
-  if (!activeChat) {
+  if (!currentChat) {
     return (
       <ChatArea>
         <EmptyState>
@@ -45,7 +45,7 @@ export function MainChatArea() {
           <EmptyStateTitle>WhatsApp Chat Viewer</EmptyStateTitle>
           <EmptyStateText>
             Import your WhatsApp chat exports to view them in the familiar WhatsApp Web interface.
-            You can import multiple chats and search through all your conversations.
+            You can import text files (.txt) or ZIP files (.zip) containing media. Support for images, videos, and documents.
           </EmptyStateText>
           <div style={{ margin: '30px 0', padding: '20px', backgroundColor: '#f5f6f6', borderRadius: '8px', fontSize: '12px', textAlign: 'left', maxWidth: '500px' }}>
             <strong>Supported WhatsApp Export Formats:</strong>
@@ -57,7 +57,8 @@ export function MainChatArea() {
           </div>
           <EmptyStateText style={{ marginTop: '20px', fontSize: '12px' }}>
             <strong>To export chats from WhatsApp:</strong><br/>
-            Open chat → Menu (⋮) → More → Export chat → Without media
+            Open chat → Menu (⋮) → More → Export chat → With/Without media<br/>
+            <em>Choose "With media" for ZIP files containing images and videos</em>
           </EmptyStateText>
           <EmptyStateText style={{ marginTop: '10px', fontSize: '11px', color: '#8696a0' }}>
             Having issues? Check browser console (F12) for detailed parsing logs
@@ -81,7 +82,7 @@ export function MainChatArea() {
     // In WhatsApp exports, the current user might be represented differently
     
     // Get all unique senders
-    const senders = [...new Set(activeChat.messages
+    const senders = [...new Set(currentChat.messages
       .filter(m => m.type !== 'system')
       .map(m => m.sender.trim()))];
     
@@ -116,7 +117,7 @@ export function MainChatArea() {
 
   const shouldShowDateSeparator = (message: Message, index: number): boolean => {
     if (index === 0) return true;
-    const prevMessage = activeChat.messages[index - 1];
+    const prevMessage = currentChat.messages[index - 1];
     const currentDate = message.timestamp.toDateString();
     const prevDate = prevMessage.timestamp.toDateString();
     return currentDate !== prevDate;
@@ -136,7 +137,28 @@ export function MainChatArea() {
     }
   };
 
-  const getMessageTypeDisplay = (message: Message): string => {
+  const getMessageTypeDisplay = (message: Message): React.ReactNode => {
+    // If the message has a media file, render it with MediaDisplay component
+    if (message.mediaFile) {
+      return (
+        <div>
+          <MediaDisplay 
+            mediaFile={message.mediaFile} 
+            caption={message.caption}
+          />
+          {/* Show additional text content if it's not just the media placeholder */}
+          {message.content && 
+           !message.content.toLowerCase().includes('omitted') && 
+           !message.caption && (
+            <div style={{ marginTop: '8px', fontSize: '14px' }}>
+              {message.content}
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    // For media messages without actual files, show placeholders
     switch (message.type) {
       case 'image':
         return '📷 Photo';
@@ -155,25 +177,12 @@ export function MainChatArea() {
     <ChatArea>
       <ChatHeader>
         <DefaultAvatar>
-          {activeChat.name.charAt(0).toUpperCase()}
+          {currentChat.name.charAt(0).toUpperCase()}
         </DefaultAvatar>
         <ChatHeaderInfo>
-          <ChatHeaderName>{activeChat.name}</ChatHeaderName>
-          <ChatHeaderStatus>
-            {activeChat.messages.length} messages • Current user: "{getCurrentUser()}"
-            {activeChat.isGroup && ` • ${activeChat.participants?.length || 0} participants`}
-          </ChatHeaderStatus>
+          <ChatHeaderName>{currentChat.name}</ChatHeaderName>
         </ChatHeaderInfo>
         <div style={{ display: 'flex', gap: '10px' }}>
-          <IconButton>
-            <VideoCallIcon />
-          </IconButton>
-          <IconButton>
-            <PhoneCallIcon />
-          </IconButton>
-          <IconButton>
-            <SearchIcon />
-          </IconButton>
           <IconButton>
             <MoreOptionsIcon />
           </IconButton>
@@ -182,7 +191,7 @@ export function MainChatArea() {
 
       <MessagesContainer>
         {(() => {
-          const messageGroups = groupConsecutiveMessages(activeChat.messages);
+          const messageGroups = groupConsecutiveMessages(currentChat.messages);
           const elements: React.ReactElement[] = [];
           let messageIndex = 0;
 
@@ -192,7 +201,7 @@ export function MainChatArea() {
               const showDateSeparator = shouldShowDateSeparator(message, messageIndex);
               const senderColorIndex = getSenderColorIndex(message.sender);
               const isFirstInGroup = msgIndexInGroup === 0;
-              const showSender = isFirstInGroup && shouldShowSenderName(group, activeChat.isGroup || false);
+              const showSender = isFirstInGroup && shouldShowSenderName(group, currentChat.isGroup || false);
               
               if (showDateSeparator) {
                 elements.push(
@@ -227,15 +236,17 @@ export function MainChatArea() {
                     )}
                     <MessageContent>
                       {getMessageTypeDisplay(message)}
+                      <span style={{ display: 'inline-flex', alignItems: 'flex-end', marginLeft: '8px' }}>
+                        <MessageTimestamp>
+                          {format(message.timestamp, 'h:mm a')}
+                        </MessageTimestamp>
+                        {isOutgoing && (
+                          <MessageStatus $delivered={true} $read={false}>
+                            <DoubleCheckIcon />
+                          </MessageStatus>
+                        )}
+                      </span>
                     </MessageContent>
-                    <MessageTimestamp>
-                      {format(message.timestamp, 'HH:mm')}
-                    </MessageTimestamp>
-                    {isOutgoing && (
-                      <MessageStatus $delivered={true} $read={false}>
-                        <DoubleCheckIcon />
-                      </MessageStatus>
-                    )}
                   </MessageBubble>
                 );
               }
