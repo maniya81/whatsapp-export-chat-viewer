@@ -231,7 +231,7 @@ export class ZipParser {
    * Find media file that matches a message based on various heuristics
    */
   private static findMediaForMessage(
-    message: any,
+    message: { content: string; timestamp: Date; type: string; id: string },
     mediaFiles: Map<string, MediaFile>
   ): MediaFile | undefined {
     // Strategy 1: Look for direct filename references in message content

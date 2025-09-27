@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useReducer, type ReactNode } from 'react';
+import React, { createContext, useReducer, type ReactNode } from 'react';
 import type { Chat } from '../types/chat';
 
 interface AppState {
@@ -43,6 +43,8 @@ const AppContext = createContext<{
   dispatch: React.Dispatch<AppAction>;
 } | null>(null);
 
+export { AppContext };
+
 export function AppProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(appReducer, initialState);
 
@@ -51,12 +53,4 @@ export function AppProvider({ children }: { children: ReactNode }) {
       {children}
     </AppContext.Provider>
   );
-}
-
-export function useApp() {
-  const context = useContext(AppContext);
-  if (!context) {
-    throw new Error('useApp must be used within an AppProvider');
-  }
-  return context;
 }

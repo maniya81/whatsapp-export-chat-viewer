@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { useApp } from '../context/AppContext';
+import { useApp } from '../context/useApp';
 import { format } from 'date-fns';
 import type { Message } from '../types/chat';
 import { DoubleCheckIcon } from './MessageIcons';
@@ -35,7 +35,7 @@ export function MainChatArea() {
     if (currentChat && messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [currentChat?.id, currentChat?.messages.length]);
+  }, [currentChat]);
 
   if (!currentChat) {
     return (

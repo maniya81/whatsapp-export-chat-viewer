@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { useApp } from '../context/AppContext';
+import { useApp } from '../context/useApp';
 import { db } from '../utils/database';
 import { ZipParser } from '../utils/zipParser';
 import { ChatParser } from '../utils/chatParser';
@@ -145,7 +145,7 @@ export function FileImportArea() {
     }
   };
 
-  const loadCurrentChat = async () => {
+  const loadCurrentChat = React.useCallback(async () => {
     dispatch({ type: 'SET_LOADING', payload: true });
     try {
       const currentChat = await db.getCurrentChat();
@@ -155,7 +155,7 @@ export function FileImportArea() {
     } finally {
       dispatch({ type: 'SET_LOADING', payload: false });
     }
-  };
+  }, [dispatch]);
 
   const handleSwitchSide = () => {
     dispatch({ type: 'TOGGLE_SWITCH_SIDE' });
@@ -164,7 +164,7 @@ export function FileImportArea() {
   // Load current chat on mount
   React.useEffect(() => {
     loadCurrentChat();
-  }, []);
+  }, [loadCurrentChat]);
 
   return (
     <ImportContainer>

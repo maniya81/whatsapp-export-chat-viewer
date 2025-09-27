@@ -9,7 +9,7 @@ export class ChatParser {
     const messages: Message[] = [];
 
     // Extract chat name from filename (remove .txt and "WhatsApp Chat with " prefix if present)
-    let chatName = filename
+    const chatName = filename
       .replace(".txt", "")
       .replace(/^WhatsApp Chat with /, "")
       .replace(/^WhatsApp Chat - /, "");
