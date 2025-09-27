@@ -1,8 +1,9 @@
 {
   "name": "whatsapp-chat-viewer",
-  "private": true,
-  "version": "0.0.0",
+  "private": false,
+  "version": "1.0.0",
   "type": "module",
+  "homepage": "https://maniya81.github.io/whatsapp-export-chat-viewer",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
