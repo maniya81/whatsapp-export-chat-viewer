@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, memo, useCallback } from 'react';
+import { useState, useRef, memo, useCallback } from 'react';
 import styled from 'styled-components';
 import type { MediaFile } from '../types/chat';
 import { MediaViewer } from './MediaViewer';
@@ -160,7 +160,7 @@ const MediaDisplay = memo(({ mediaFile, caption }: MediaDisplayProps) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [showFullscreen, setShowFullscreen] = useState(false);
-  const [isIntersecting, setIsIntersecting] = useState(true); // Force true for debugging
+  const isIntersecting = true; // Always load images immediately
   const containerRef = useRef<HTMLDivElement>(null);
 
   // Debug logging
@@ -254,23 +254,6 @@ const MediaDisplay = memo(({ mediaFile, caption }: MediaDisplayProps) => {
           loading,
           error
         });
-        console.log(`BLOB URL DEBUG for ${mediaFile.name}:`, mediaFile.url);
-        
-        // Test if blob URL is valid by trying to fetch a small portion
-        if (mediaFile.url && mediaFile.url.startsWith('blob:')) {
-          console.log(`Testing blob URL for ${mediaFile.name}...`);
-          fetch(mediaFile.url)
-            .then(response => {
-              console.log(`Blob URL test for ${mediaFile.name}:`, response.ok ? 'SUCCESS' : 'FAILED', response.status, `Content-Type: ${response.headers.get('content-type')}`);
-              return response.blob();
-            })
-            .then(blob => {
-              console.log(`Full blob size for ${mediaFile.name}:`, blob.size, `Type: ${blob.type}`);
-            })
-            .catch(err => {
-              console.error(`Blob URL test failed for ${mediaFile.name}:`, err);
-            });
-        }
         return (
           <>
             {loading && <LoadingSpinner />}
@@ -298,12 +281,7 @@ const MediaDisplay = memo(({ mediaFile, caption }: MediaDisplayProps) => {
                   handleImageError();
                 }}
                 onClick={handleFullscreenToggle}
-                style={{ 
-                  display: loading ? 'none' : 'block',
-                  border: '2px solid red', // Temporary debugging border
-                  minWidth: '100px',
-                  minHeight: '100px'
-                }}
+                style={{ display: loading ? 'none' : 'block' }}
               />
             )}
             <MediaViewer 
