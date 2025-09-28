@@ -90,53 +90,61 @@ export const Sidebar = styled.div`
 `;
 
 export const SidebarHeader = styled.header`
-  height: 48px;
-  padding: 8px 16px;
+  height: 3em;
+  padding: 0.5em 1em;
   background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 0.125em 0.5em rgba(0, 0, 0, 0.08);
   position: relative;
   z-index: 100;
   border-bottom: 1px solid rgba(255, 255, 255, 0.8);
+  font-size: 16px;
 
-  /* Mobile responsive */
+  /* Mobile responsive - Samsung S24 Ultra and similar devices */
   @media (max-width: ${breakpoints.mobile}) {
-    height: 52px;
-    padding: 10px 16px;
+    height: 3.25em;
+    padding: 0.625em 1em;
+    font-size: 18px;
   }
 
   @media (max-width: ${breakpoints.smallMobile}) {
-    height: 48px;
-    padding: 8px 12px;
+    height: 3em;
+    padding: 0.5em 0.75em;
+    font-size: 17px;
+  }
+
+  /* High DPI displays */
+  @media (-webkit-min-device-pixel-ratio: 3), (min-resolution: 288dpi) {
+    font-size: 18px;
   }
 `;
 
 export const ProfileSection = styled.div`
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 0.625em;
 `;
 
 export const Avatar = styled.img`
-  width: 36px;
-  height: 36px;
+  width: 2.25em;
+  height: 2.25em;
   border-radius: 50%;
   object-fit: cover;
   border: 2px solid rgba(255, 255, 255, 0.8);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0.125em 0.375em rgba(0, 0, 0, 0.1);
 
   /* Mobile responsive */
   @media (max-width: ${breakpoints.mobile}) {
-    width: 32px;
-    height: 32px;
+    width: 2em;
+    height: 2em;
   }
 `;
 
 export const DefaultAvatar = styled.div`
-  width: 36px;
-  height: 36px;
+  width: 2.25em;
+  height: 2.25em;
   border-radius: 50%;
   background: ${colors.textMuted};
   display: flex;
@@ -144,15 +152,15 @@ export const DefaultAvatar = styled.div`
   justify-content: center;
   color: white;
   font-weight: 600;
-  font-size: 14px;
+  font-size: 0.875em;
   border: 2px solid rgba(255, 255, 255, 0.8);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0.125em 0.375em rgba(0, 0, 0, 0.1);
 
   /* Mobile responsive */
   @media (max-width: ${breakpoints.mobile}) {
-    width: 32px;
-    height: 32px;
-    font-size: 12px;
+    width: 2em;
+    height: 2em;
+    font-size: 0.75em;
   }
 `;
 
@@ -452,8 +460,8 @@ export const ChatArea = styled.div`
 `;
 
 export const ChatHeader = styled.header`
-  height: 52px;
-  padding: 8px 16px;
+  height: 3.25em;
+  padding: 0.5em 1em;
   background: linear-gradient(
     135deg,
     ${colors.panelHeaderBackground} 0%,
@@ -463,19 +471,27 @@ export const ChatHeader = styled.header`
   align-items: center;
   justify-content: space-between;
   border-left: 1px solid ${colors.border};
-  box-shadow: 0 2px 8px rgba(11, 20, 26, 0.08);
+  box-shadow: 0 0.125em 0.5em rgba(11, 20, 26, 0.08);
+  font-size: 16px;
 
-  /* Mobile responsive */
+  /* Mobile responsive - Samsung S24 Ultra optimized */
   @media (max-width: ${breakpoints.mobile}) {
-    height: 48px;
-    padding: 6px 12px;
+    height: 3em;
+    padding: 0.375em 0.75em;
     border-left: none;
     border-top: 1px solid ${colors.border};
+    font-size: 18px;
   }
 
   @media (max-width: ${breakpoints.smallMobile}) {
-    height: 46px;
-    padding: 5px 10px;
+    height: 2.875em;
+    padding: 0.3125em 0.625em;
+    font-size: 17px;
+  }
+
+  /* High DPI displays */
+  @media (-webkit-min-device-pixel-ratio: 3), (min-resolution: 288dpi) {
+    font-size: 18px;
   }
 `;
 
@@ -483,16 +499,16 @@ export const ChatHeaderInfo = styled.div`
   display: flex;
   align-items: center;
   flex: 1;
-  margin-left: 15px;
+  margin-left: 0.9375em;
   overflow: hidden;
 
   /* Mobile responsive */
   @media (max-width: ${breakpoints.mobile}) {
-    margin-left: 12px;
+    margin-left: 0.75em;
   }
 
   @media (max-width: ${breakpoints.smallMobile}) {
-    margin-left: 8px;
+    margin-left: 0.5em;
   }
 `;
 

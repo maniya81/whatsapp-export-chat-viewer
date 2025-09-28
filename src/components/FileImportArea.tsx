@@ -6,14 +6,27 @@ import { ZipParser } from '../utils/zipParser';
 import { ChatParser } from '../utils/chatParser';
 
 const ImportContainer = styled.div`
-  padding: 12px 20px;
+  padding: 0.75em 1.25em;
   border-bottom: 1px solid #e0e0e0;
   background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
   display: flex;
   align-items: center;
-  gap: 12px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-  min-height: 60px;
+  gap: 0.75em;
+  box-shadow: 0 0.0625em 0.1875em rgba(0, 0, 0, 0.05);
+  min-height: 3.75em;
+  font-size: 16px;
+  
+  /* Mobile responsive */
+  @media (max-width: 768px) {
+    padding: 1em 1.5em;
+    gap: 1em;
+    font-size: 18px;
+  }
+
+  @media (max-width: 480px) {
+    padding: 0.875em 1.25em;
+    font-size: 17px;
+  }
 `;
 
 const FileInput = styled.input`
@@ -23,52 +36,66 @@ const FileInput = styled.input`
 const ImportButton = styled.label`
   background: linear-gradient(135deg, #25d366 0%, #20b858 100%);
   color: white;
-  padding: 8px 16px;
-  border-radius: 18px;
+  padding: 0.5em 1em;
+  border-radius: 1.125em;
   cursor: pointer;
   font-weight: 600;
-  font-size: 12px;
+  font-size: 0.75em;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 2px 6px rgba(37, 211, 102, 0.25);
+  box-shadow: 0 0.125em 0.375em rgba(37, 211, 102, 0.25);
   border: none;
+  white-space: nowrap;
 
   &:hover {
-    transform: translateY(-1px);
+    transform: translateY(-0.0625em);
     background: linear-gradient(135deg, #20b858 0%, #1da750 100%);
-    box-shadow: 0 3px 10px rgba(37, 211, 102, 0.35);
+    box-shadow: 0 0.1875em 0.625em rgba(37, 211, 102, 0.35);
   }
 
   &:active {
     transform: translateY(0);
   }
+
+  /* Mobile responsive */
+  @media (max-width: 768px) {
+    padding: 0.625em 1.125em;
+    font-size: 0.875em;
+  }
 `;
 
 const StatusText = styled.span`
   color: #667781;
-  font-size: 13px;
+  font-size: 0.8125em;
   font-weight: 500;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 300px;
+  max-width: 18.75em;
+  
+  /* Mobile responsive */
+  @media (max-width: 768px) {
+    font-size: 0.875em;
+    max-width: 50vw;
+  }
 `;
 
 const ClearButton = styled.button`
   background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
   color: white;
   border: none;
-  padding: 6px 14px;
-  border-radius: 15px;
+  padding: 0.375em 0.875em;
+  border-radius: 0.9375em;
   cursor: pointer;
-  font-size: 11px;
+  font-size: 0.6875em;
   font-weight: 600;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 2px 6px rgba(220, 53, 69, 0.25);
+  box-shadow: 0 0.125em 0.375em rgba(220, 53, 69, 0.25);
+  white-space: nowrap;
 
   &:hover {
-    transform: translateY(-1px);
+    transform: translateY(-0.0625em);
     background: linear-gradient(135deg, #c82333 0%, #a71e2a 100%);
-    box-shadow: 0 3px 10px rgba(220, 53, 69, 0.35);
+    box-shadow: 0 0.1875em 0.625em rgba(220, 53, 69, 0.35);
   }
 
   &:active {
@@ -79,7 +106,13 @@ const ClearButton = styled.button`
     opacity: 0.6;
     cursor: not-allowed;
     transform: none;
-    box-shadow: 0 1px 3px rgba(220, 53, 69, 0.15);
+    box-shadow: 0 0.0625em 0.1875em rgba(220, 53, 69, 0.15);
+  }
+
+  /* Mobile responsive */
+  @media (max-width: 768px) {
+    padding: 0.5em 1em;
+    font-size: 0.75em;
   }
 `;
 
@@ -87,22 +120,29 @@ const SwitchButton = styled.button`
   background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
   color: white;
   border: none;
-  padding: 6px 14px;
-  border-radius: 15px;
+  padding: 0.375em 0.875em;
+  border-radius: 0.9375em;
   cursor: pointer;
-  font-size: 11px;
+  font-size: 0.6875em;
   font-weight: 600;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 2px 6px rgba(0, 123, 255, 0.25);
+  box-shadow: 0 0.125em 0.375em rgba(0, 123, 255, 0.25);
+  white-space: nowrap;
 
   &:hover {
-    transform: translateY(-1px);
+    transform: translateY(-0.0625em);
     background: linear-gradient(135deg, #0056b3 0%, #004085 100%);
-    box-shadow: 0 3px 10px rgba(0, 123, 255, 0.35);
+    box-shadow: 0 0.1875em 0.625em rgba(0, 123, 255, 0.35);
   }
 
   &:active {
     transform: translateY(0);
+  }
+
+  /* Mobile responsive */
+  @media (max-width: 768px) {
+    padding: 0.5em 1em;
+    font-size: 0.75em;
   }
 `;
 

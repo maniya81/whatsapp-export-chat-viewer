@@ -214,6 +214,80 @@ export class ChatParser {
   private static detectMessageType(content: string): Message["type"] {
     const lowerContent = content.toLowerCase();
 
+    // Check for file attachments with extensions
+    if (lowerContent.includes("(file attached)")) {
+      console.log("Detected file attached pattern in:", content);
+      const fileExtension = content
+        .match(/\.([a-zA-Z0-9]+)\s*\(/)?.[1]
+        ?.toLowerCase();
+
+      if (fileExtension) {
+        // Image file types
+        if (
+          [
+            "jpg",
+            "jpeg",
+            "png",
+            "gif",
+            "bmp",
+            "webp",
+            "svg",
+            "tiff",
+            "tif",
+          ].includes(fileExtension)
+        ) {
+          console.log("Detected as image type:", content);
+          return "image";
+        }
+        // Video file types
+        if (
+          [
+            "mp4",
+            "mov",
+            "avi",
+            "mkv",
+            "flv",
+            "webm",
+            "3gp",
+            "wmv",
+            "m4v",
+          ].includes(fileExtension)
+        ) {
+          return "video";
+        }
+        // Audio file types
+        if (
+          ["mp3", "wav", "aac", "flac", "ogg", "m4a", "wma", "opus"].includes(
+            fileExtension
+          )
+        ) {
+          return "audio";
+        }
+        // Document file types
+        if (
+          [
+            "pdf",
+            "doc",
+            "docx",
+            "txt",
+            "rtf",
+            "xls",
+            "xlsx",
+            "ppt",
+            "pptx",
+            "zip",
+            "rar",
+          ].includes(fileExtension)
+        ) {
+          return "document";
+        }
+      }
+
+      // Default to document if we can't determine the type
+      return "document";
+    }
+
+    // Legacy patterns for older WhatsApp exports
     if (
       content.includes("<Media omitted>") ||
       lowerContent.includes("image omitted") ||

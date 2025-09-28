@@ -40,7 +40,18 @@ export class ZipParser {
       // Catalog media files
       else if (this.isMediaFile(fileName)) {
         console.log("Found media file:", relativePath);
-        const blob = await zipEntry.async("blob");
+
+        // Get binary data as arraybuffer to ensure proper handling
+        const arrayBuffer = await zipEntry.async("arraybuffer");
+        const mimeType = this.getMimeType(fileName);
+
+        console.log(
+          `Creating blob for ${fileName}: size=${arrayBuffer.byteLength}, mimeType=${mimeType}`
+        );
+
+        // Create blob with proper MIME type
+        const blob = new Blob([arrayBuffer], { type: mimeType });
+
         const mediaFile: MediaFile = {
           id: `media-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
           name: fileName,
@@ -133,6 +144,52 @@ export class ZipParser {
   }
 
   /**
+   * Get MIME type for a file based on its extension
+   */
+  private static getMimeType(fileName: string): string {
+    const extension = fileName.toLowerCase().split(".").pop();
+
+    const mimeTypes: Record<string, string> = {
+      // Images
+      jpg: "image/jpeg",
+      jpeg: "image/jpeg",
+      png: "image/png",
+      gif: "image/gif",
+      webp: "image/webp",
+      bmp: "image/bmp",
+      tiff: "image/tiff",
+      svg: "image/svg+xml",
+
+      // Videos
+      mp4: "video/mp4",
+      mov: "video/quicktime",
+      avi: "video/x-msvideo",
+      mkv: "video/x-matroska",
+      webm: "video/webm",
+      "3gp": "video/3gpp",
+      wmv: "video/x-ms-wmv",
+      flv: "video/x-flv",
+
+      // Audio
+      mp3: "audio/mpeg",
+      wav: "audio/wav",
+      aac: "audio/aac",
+      ogg: "audio/ogg",
+      m4a: "audio/mp4",
+      wma: "audio/x-ms-wma",
+      opus: "audio/opus",
+
+      // Documents
+      pdf: "application/pdf",
+      doc: "application/msword",
+      docx: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      txt: "text/plain",
+    };
+
+    return mimeTypes[extension || ""] || "application/octet-stream";
+  }
+
+  /**
    * Get media type category from filename
    */
   private static getMediaType(fileName: string): string {
@@ -183,6 +240,13 @@ export class ZipParser {
       if (message.type === "text" || message.type === "system") {
         return message;
       }
+
+      console.log(
+        `Processing ${message.type} message: ${message.content.substring(
+          0,
+          100
+        )}`
+      );
 
       // Try to find matching media file
       const mediaFile = this.findMediaForMessage(message, mediaFiles);
@@ -237,7 +301,53 @@ export class ZipParser {
     // Strategy 1: Look for direct filename references in message content
     const content = message.content.toLowerCase();
 
-    // Extract potential filenames from the message content
+    // Strategy 1a: Extract filename from "(file attached)" pattern
+    const fileAttachedPattern = /([^\s]+\.[a-zA-Z0-9]+)\s*\(file attached\)/i;
+    const attachedMatch = message.content.match(fileAttachedPattern);
+    if (attachedMatch) {
+      const filename = attachedMatch[1];
+      console.log(`🔍 MEDIA MATCHING: Message content: "${message.content}"`);
+      console.log(
+        `🔍 MEDIA MATCHING: Extracted filename from (file attached): "${filename}"`
+      );
+      console.log(
+        `🔍 MEDIA MATCHING: Available media files:`,
+        Array.from(mediaFiles.keys())
+      );
+
+      // Try exact match first
+      if (mediaFiles.has(filename)) {
+        console.log(`✅ MEDIA MATCHING: Found exact match: ${filename}`);
+        return mediaFiles.get(filename);
+      }
+
+      // Try case-insensitive search
+      for (const [mediaFileName, mediaFile] of mediaFiles) {
+        if (mediaFileName.toLowerCase() === filename.toLowerCase()) {
+          console.log(
+            `✅ MEDIA MATCHING: Found case-insensitive match: ${mediaFileName}`
+          );
+          return mediaFile;
+        }
+      }
+
+      // Try partial match (in case of path differences)
+      for (const [mediaFileName, mediaFile] of mediaFiles) {
+        if (
+          mediaFileName.toLowerCase().includes(filename.toLowerCase()) ||
+          filename.toLowerCase().includes(mediaFileName.toLowerCase())
+        ) {
+          console.log(
+            `✅ MEDIA MATCHING: Found partial match: ${mediaFileName} for ${filename}`
+          );
+          return mediaFile;
+        }
+      }
+
+      console.log(`❌ MEDIA MATCHING: No match found for: ${filename}`);
+    }
+
+    // Strategy 1b: Extract potential filenames from the message content
     const filenamePatterns = [
       /([a-zA-Z0-9_-]+\.[a-zA-Z0-9]+)/g, // Basic filename pattern
       /([a-zA-Z0-9_-]+\s*-\s*[a-zA-Z0-9_-]+\.[a-zA-Z0-9]+)/g, // Filename with dashes

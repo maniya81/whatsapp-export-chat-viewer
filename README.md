@@ -12,12 +12,15 @@ A modern, responsive web application for viewing WhatsApp chat exports with medi
 
 ## ✨ Features
 
-- 📱 **Authentic WhatsApp Interface** - Matches the original WhatsApp Web design
+- 📱 **Mobile-First Design** - Optimized for Samsung S24 Ultra and other high-DPI devices
 - 📁 **Multiple Import Formats** - Support for both `.txt` and `.zip` exports
-- 🖼️ **Media Display** - View images, videos, audio files, and documents
+- 🖼️ **Advanced Media Viewing** - Full-screen image viewer with zoom, pan, and touch gestures
+- 🎬 **Direct Video Playback** - Full-screen video player with mobile controls
 - 🔄 **Switch Side Feature** - Toggle message alignment (left/right)
 - ⏰ **Proper Timestamps** - 12-hour format with authentic positioning
 - ✅ **Read Receipts** - Blue double ticks for delivered messages
+- 📐 **Responsive Units** - Uses em units for consistent scaling across devices
+- 🎯 **Touch-Optimized** - Large touch targets and mobile-friendly interactions
 - 📱 **Responsive Design** - Works on desktop and mobile devices
 - 🗄️ **Single Chat Mode** - One chat at a time for simplicity
 

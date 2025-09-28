@@ -139,8 +139,20 @@ export function MainChatArea() {
   };
 
   const getMessageTypeDisplay = (message: Message): React.ReactNode => {
+    // Debug logging to see what's happening
+    if (message.content && message.content.includes("IMG-20230215-WA0039.jpg")) {
+      console.log("DEBUG: IMG-20230215-WA0039.jpg message:", {
+        type: message.type,
+        content: message.content,
+        hasMediaFile: !!message.mediaFile,
+        mediaFile: message.mediaFile,
+        id: message.id
+      });
+    }
+
     // If the message has a media file, render it with MediaDisplay component
     if (message.mediaFile) {
+      console.log("Rendering MediaDisplay for:", message.mediaFile.name);
       return (
         <div>
           <MediaDisplay 
