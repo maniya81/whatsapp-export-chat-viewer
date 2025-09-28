@@ -6,12 +6,14 @@ import { ZipParser } from '../utils/zipParser';
 import { ChatParser } from '../utils/chatParser';
 
 const ImportContainer = styled.div`
-  padding: 20px;
+  padding: 12px 20px;
   border-bottom: 1px solid #e0e0e0;
-  background-color: #f8f9fa;
+  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  min-height: 60px;
 `;
 
 const FileInput = styled.input`
@@ -19,51 +21,88 @@ const FileInput = styled.input`
 `;
 
 const ImportButton = styled.label`
-  background-color: #25d366;
+  background: linear-gradient(135deg, #25d366 0%, #20b858 100%);
   color: white;
-  padding: 10px 20px;
-  border-radius: 20px;
+  padding: 8px 16px;
+  border-radius: 18px;
   cursor: pointer;
-  font-weight: 500;
-  transition: background-color 0.2s;
+  font-weight: 600;
+  font-size: 12px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 6px rgba(37, 211, 102, 0.25);
+  border: none;
 
   &:hover {
-    background-color: #20b858;
+    transform: translateY(-1px);
+    background: linear-gradient(135deg, #20b858 0%, #1da750 100%);
+    box-shadow: 0 3px 10px rgba(37, 211, 102, 0.35);
+  }
+
+  &:active {
+    transform: translateY(0);
   }
 `;
 
 const StatusText = styled.span`
   color: #667781;
-  font-size: 14px;
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 300px;
 `;
 
 const ClearButton = styled.button`
-  background-color: #dc3545;
+  background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
   color: white;
   border: none;
-  padding: 8px 16px;
-  border-radius: 16px;
+  padding: 6px 14px;
+  border-radius: 15px;
   cursor: pointer;
-  font-size: 12px;
-  transition: background-color 0.2s;
+  font-size: 11px;
+  font-weight: 600;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 6px rgba(220, 53, 69, 0.25);
 
   &:hover {
-    background-color: #c82333;
+    transform: translateY(-1px);
+    background: linear-gradient(135deg, #c82333 0%, #a71e2a 100%);
+    box-shadow: 0 3px 10px rgba(220, 53, 69, 0.35);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: 0 1px 3px rgba(220, 53, 69, 0.15);
   }
 `;
 
 const SwitchButton = styled.button`
-  background-color: #007bff;
+  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
   color: white;
   border: none;
-  padding: 8px 16px;
-  border-radius: 16px;
+  padding: 6px 14px;
+  border-radius: 15px;
   cursor: pointer;
-  font-size: 12px;
-  transition: background-color 0.2s;
+  font-size: 11px;
+  font-weight: 600;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 6px rgba(0, 123, 255, 0.25);
 
   &:hover {
-    background-color: #0056b3;
+    transform: translateY(-1px);
+    background: linear-gradient(135deg, #0056b3 0%, #004085 100%);
+    box-shadow: 0 3px 10px rgba(0, 123, 255, 0.35);
+  }
+
+  &:active {
+    transform: translateY(0);
   }
 `;
 
